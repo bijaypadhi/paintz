@@ -94,7 +94,7 @@ AirbrushTool.prototype.update = function () {
 	}
 	// The airbrush tool does not clear the canvas every frame;
 	// it just adds on the new points in the current operation.  This may
-	// need to be changed if a future version of PaintZ has something other
+	// need to be changed if a future version of PaintKFZ has something other
 	// than the current tool drawing to the pre-canvas every frame.
 	this._prepareCanvas();
 	

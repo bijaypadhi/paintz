@@ -33,10 +33,10 @@ InstallDialog.prototype._setUp = function (contents) {
 	if (this.deferredInstall) {
 		this._changeToPWAInstallPrompt();
 	} else if (Utils.isMobileLike) {
-		this._cta.innerHTML = 'add PaintZ to your home screen';
+		this._cta.innerHTML = 'add PaintKFZ to your home screen';
 		this._submitLink.href = 'https://www.androidauthority.com/add-website-android-iphone-home-screen-3181682/';
 	} else if (navigator.userAgent.match(/chrome/i)) {
-		this._cta.innerHTML = 'install PaintZ from the Chrome Web Store';
+		this._cta.innerHTML = 'install PaintKFZ from the Chrome Web Store';
 		this._submitLink.innerHTML = 'Install';
 		this._submitLink.href = 'https://chrome.google.com/webstore/detail/gdjcnhanmagpjdpilaehedkchegnkdoj';
 		var iconURL = 'images/icons/cws.svg#icon';
@@ -72,7 +72,7 @@ InstallDialog.prototype.open = function () {
  * Replace the prompt with a PWA installation trigger.
  */
 InstallDialog.prototype._changeToPWAInstallPrompt = function () {
-	this._cta.innerHTML = 'install PaintZ as an app';
+	this._cta.innerHTML = 'install PaintKFZ as an app';
 	this._submitLink.innerHTML = 'Install';
 	this._submitLink.href = '#';
 	this._submitLink.addEventListener('click', (function (e) {

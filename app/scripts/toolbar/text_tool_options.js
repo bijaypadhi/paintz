@@ -25,7 +25,7 @@ TextToolOptionsToolbox.prototype.REQUEST_FONT_ACCESS_OPTION_VALUE = 'paintz-requ
 /** {String} The text to show on the menu option to request access to local fonts */
 TextToolOptionsToolbox.prototype.REQUEST_FONT_ACCESS_OPTION_TEXT = 'Show more fonts...';
 /** {String} Message to show when the user denies local font access */
-TextToolOptionsToolbox.prototype.FONT_ACCESS_UNAUTHORIZED_MESSAGE = 'PaintZ needs permission to show all your fonts.  You may need to go into your browser\'s site settings to grant that permission.';
+TextToolOptionsToolbox.prototype.FONT_ACCESS_UNAUTHORIZED_MESSAGE = 'PaintKFZ needs permission to show all your fonts.  You may need to go into your browser\'s site settings to grant that permission.';
 /** {Array<Object>} The base font types to always show */
 TextToolOptionsToolbox.prototype.BASE_FONTS = [
 	{ name: 'Sans-serif', css: 'sans-serif' },

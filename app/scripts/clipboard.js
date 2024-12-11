@@ -33,8 +33,8 @@ function ClipboardManager() {
 }
 
 // Define constants.
-ClipboardManager.prototype.CLIPBOARD_UNSUPPORTED_MESSAGE = 'Your browser does not support copying or cutting selections from PaintZ.  ' + Utils.SUGGESTED_BROWSER_MESSAGE;
-ClipboardManager.prototype.CLIPBOARD_UNAUTHORIZED_MESSAGE = 'PaintZ needs permission to paste from your clipboard.  You may need to go into your browser\'s site settings to grant that permission.';
+ClipboardManager.prototype.CLIPBOARD_UNSUPPORTED_MESSAGE = 'Your browser does not support copying or cutting selections from PaintKFZ.  ' + Utils.SUGGESTED_BROWSER_MESSAGE;
+ClipboardManager.prototype.CLIPBOARD_UNAUTHORIZED_MESSAGE = 'PaintKFZ needs permission to paste from your clipboard.  You may need to go into your browser\'s site settings to grant that permission.';
 
 /**
  * Handle something being pasted to the page.

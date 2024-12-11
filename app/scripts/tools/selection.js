@@ -82,7 +82,7 @@ SelectionTool.prototype.start = function (pointerState) {
 				height: 0
 			},
 			content: {},
-			// The fill color should remain the same for this selection even if the PaintZ fill color changes.
+			// The fill color should remain the same for this selection even if the PaintKFZ fill color changes.
 			fillColor: settings.get('fillColor'),
 			firstMove: true,
 			transformed: false

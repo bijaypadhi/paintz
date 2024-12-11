@@ -26,27 +26,27 @@ MSAccessKeyDialog.prototype.KEY_SEQUENCES = {
 		'S': function () { dialogs.save.open(); }, // Save
 		'A': function () { dialogs.save.open(); }, // Save As...
 		'C': function () {
-			alert('\u201cFrom Scanner or Camera...\u201d is not currently supported in PaintZ.'); },
+			alert('\u201cFrom Scanner or Camera...\u201d is not currently supported in PaintKFZ.'); },
 		'V': function () { window.print(); }, // Print Preview
 		'U': function () {
-			alert('\u201cPage Setup...\u201d is not currently supported in PaintZ.'); },
+			alert('\u201cPage Setup...\u201d is not currently supported in PaintKFZ.'); },
 		'P': function () { window.print(); }, // Print...
 		'E': function () {
 			dialogs.save._createDownloadURL().then(dialogs.save._boundHandleShare); }, // Send...
 		'B': function () {
-			alert('\u201cSet As Background (Tiled)\u201d is not currently supported in PaintZ.'); },
+			alert('\u201cSet As Background (Tiled)\u201d is not currently supported in PaintKFZ.'); },
 		'K': function () {
-			alert('\u201cSet As Background (Centered)\u201d is not currently supported in PaintZ.'); },
+			alert('\u201cSet As Background (Centered)\u201d is not currently supported in PaintKFZ.'); },
 		'X': function () { window.close(); }, // Exit
 		// Win7 File menu...
 		'R': { // Print submenu...
 			'P': function () { window.print(); }, // Print
 			'S': function () {
-				alert('\u201cPage setup\u201d is not currently supported in PaintZ.'); },
+				alert('\u201cPage setup\u201d is not currently supported in PaintKFZ.'); },
 			'V': function () { window.print(); } // Print preview
 		},
 		'M': function () {
-			alert('\u201cFrom scanner or camera\u201d is not currently supported in PaintZ.'); },
+			alert('\u201cFrom scanner or camera\u201d is not currently supported in PaintKFZ.'); },
 		'D': function () {
 			dialogs.save._createDownloadURL().then(dialogs.save._boundHandleShare); }, // Send in email
 		'T': function () { dialogs.about.open(); } // About Paint
@@ -57,7 +57,7 @@ MSAccessKeyDialog.prototype.KEY_SEQUENCES = {
 		'T': function () { if (tools.currentTool instanceof SelectionTool) { tools.currentTool.cut(); } }, // Cut
 		'C': function () { if (tools.currentTool instanceof SelectionTool) { tools.currentTool.copy(); } }, // Copy
 		'P': function () { if (!clipboard.triggerPaste()) {
-			alert('For now, you need to use ' + (Utils.isApple ? '\u2318' : 'Ctrl+') + 'V to paste an image into PaintZ.'); } }, // Paste
+			alert('For now, you need to use ' + (Utils.isApple ? '\u2318' : 'Ctrl+') + 'V to paste an image into PaintKFZ.'); } }, // Paste
 		'L': function () { if (tools.currentTool instanceof SelectionTool) { tools.currentTool.clear(); } }, // Clear Selection
 		'A': function () {
 			// Select All
@@ -67,16 +67,16 @@ MSAccessKeyDialog.prototype.KEY_SEQUENCES = {
 			tools.currentTool.selectAll(canvas.width, canvas.height);
 		},
 		'O': function () {
-			alert('\u201cCopy To...\u201d is not currently supported in PaintZ.'); },
+			alert('\u201cCopy To...\u201d is not currently supported in PaintKFZ.'); },
 		'F': function () { document.getElementById('pasteFrom').click(); } // Paste From
 	},
 	'V': { // View menu...
 		'T': function () {
-			alert('\u201cShow/Hide Tool Box\u201d is not currently supported in PaintZ.'); },
+			alert('\u201cShow/Hide Tool Box\u201d is not currently supported in PaintKFZ.'); },
 		'C': function () {
-			alert('\u201cShow/Hide Color Box\u201d is not currently supported in PaintZ.'); },
+			alert('\u201cShow/Hide Color Box\u201d is not currently supported in PaintKFZ.'); },
 		'S': function () {
-			alert('\u201cShow/Hide Status Bar\u201d is not currently supported in PaintZ.'); }, 
+			alert('\u201cShow/Hide Status Bar\u201d is not currently supported in PaintKFZ.'); }, 
 		'E': function () { if (tools.currentTool !== tools.text) { tools.switchTool('text'); } }, // Text Toolbar
 		'V': function () { toolbar.toolboxes.app.attemptFullScreen(); }, // View Bitmap
 		'Z': { // Zoom submenu...
@@ -85,14 +85,14 @@ MSAccessKeyDialog.prototype.KEY_SEQUENCES = {
 			'U': function () { toolbar.toolboxes.zoom.percent.focus(); }, // Custom...
 			'G': function () { settings.set('grid', !settings.get('grid')); }, // Show Grid
 			'H': function () {
-				alert('\u201cShow Thumbnail\u201d is not currently supported in PaintZ.'); }, 
+				alert('\u201cShow Thumbnail\u201d is not currently supported in PaintKFZ.'); }, 
 		},
 		// Win7 View tab...
 		'I': function () { zoomManager.zoomIn(); }, // Zoom in
 		'O': function () { zoomManager.zoomOut(); }, // Zoom out
 		'M': function () { zoomManager.level = 1; }, // 100%
 		'R': function () {
-				alert('\u201cShow/Hide Rulers\u201d is not currently supported in PaintZ.'); },
+				alert('\u201cShow/Hide Rulers\u201d is not currently supported in PaintKFZ.'); },
 		'G': function () { settings.set('grid', !settings.get('grid')); }, // Gridlines
 		'F': function () { toolbar.toolboxes.app.attemptFullScreen(); } // Full screen
 	},
@@ -104,7 +104,7 @@ MSAccessKeyDialog.prototype.KEY_SEQUENCES = {
 			}
 		},
 		'S': function () {
-				alert('\u201cStretch/Skew\u201d is not currently supported in PaintZ.'); },
+				alert('\u201cStretch/Skew\u201d is not currently supported in PaintKFZ.'); },
 		'I': function () {
 			// Invert Colors
 			if (tools.currentTool instanceof SelectionTool) {
@@ -137,7 +137,7 @@ MSAccessKeyDialog.prototype.KEY_SEQUENCES = {
 		// Win7 Home tab...
 		'V': { // Paste menu...
 			'P': function () { if (!clipboard.triggerPaste()) {
-				alert('For now, you need to use ' + (Utils.isApple ? '\u2318' : 'Ctrl+') + 'V to paste an image into PaintZ.'); } }, // Paste
+				alert('For now, you need to use ' + (Utils.isApple ? '\u2318' : 'Ctrl+') + 'V to paste an image into PaintKFZ.'); } }, // Paste
 			'F': function () { document.getElementById('pasteFrom').click(); }, // Paste from
 		},
 		'X': function () { if (tools.currentTool instanceof SelectionTool) { tools.currentTool.cut(); } }, // Cut
@@ -154,7 +154,7 @@ MSAccessKeyDialog.prototype.KEY_SEQUENCES = {
 					tools.currentTool.selectAll(canvas.width, canvas.height);
 				},
 				'I': function () {
-					alert('\u201cInvert selection\u201d is not currently supported in PaintZ.'); },
+					alert('\u201cInvert selection\u201d is not currently supported in PaintKFZ.'); },
 				'D': function () { if (tools.currentTool instanceof SelectionTool) { tools.currentTool.clear(); } }, // Delete
 				'T': function () {
 					// Transparent selection
@@ -234,7 +234,7 @@ MSAccessKeyDialog.prototype.KEY_SEQUENCES = {
 		},
 		'D': function () { tools.switchTool('eyedropper'); }, // Color picker
 		'M': function () {
-			alert('\u201cMagnifier\u201d is not currently supported in PaintZ.'); },
+			alert('\u201cMagnifier\u201d is not currently supported in PaintKFZ.'); },
 		'B': function () { tools.switchTool('doodle'); }, // Brushes
 		'O': function () {
 			// Outline

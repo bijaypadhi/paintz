@@ -337,7 +337,7 @@ var Utils = {
 				return;
 			}
 			if (!file.type.match('image.*')) {
-				reject('PaintZ can only open valid image files.');
+				reject('PaintKFZ can only open valid image files.');
 				return;
 			}
 			

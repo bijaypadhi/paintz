@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help PaintZ improve
+about: Create a report to help PaintKFZ improve
 title: ''
 labels: bug
 assignees: ''

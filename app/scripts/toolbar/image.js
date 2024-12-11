@@ -88,7 +88,7 @@ ImageToolbox.prototype._setUp = function (contents) {
 			return;
 		}
 		if (!clipboard.triggerPaste()) {
-			alert('For now, you need to use ' + (Utils.isApple ? '\u2318' : 'Ctrl+') + 'V to paste an image into PaintZ.');
+			alert('For now, you need to use ' + (Utils.isApple ? '\u2318' : 'Ctrl+') + 'V to paste an image into PaintKFZ.');
 		}
 	}, false);
 	pasteBtn.addEventListener('contextmenu', function (e) {

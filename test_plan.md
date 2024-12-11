@@ -28,8 +28,8 @@
 		1. The open dialog
 		2. Drag and drop from the file browser
 		3. Drag and drop from another webpage
-		4. Open with PaintZ from the file browser (if supported)
-		5. Share to PaintZ from system share function (if supported)
+		4. Open with PaintKFZ from the file browser (if supported)
+		5. Share to PaintKFZ from system share function (if supported)
 
 3. Save
 	1. Open save dialog with:
@@ -539,7 +539,7 @@
 	8. Swap colors with button in dialog
 
 
-## PaintZ actions
+## PaintKFZ actions
 27. Full screen
 	1. Open with:
 		1. Toolbar button

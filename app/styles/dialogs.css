@@ -48,6 +48,7 @@
 	margin: 0 auto 16px;
 	max-width: 96%;
 	overflow: visible;
+	border-radius: 10px;
 	
 	opacity: 0;
 	-webkit-transform: scale(0);

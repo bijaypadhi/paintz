@@ -47,7 +47,7 @@ FreeformSelectionTool.prototype.start = function (pointerState) {
 		],
 		initial: {},
 		content: {},
-		// The fill color should remain the same for this selection even if the PaintZ fill color changes.
+		// The fill color should remain the same for this selection even if the PaintKFZ fill color changes.
 		fillColor: settings.get('fillColor'),
 		firstMove: true,
 		transformed: false

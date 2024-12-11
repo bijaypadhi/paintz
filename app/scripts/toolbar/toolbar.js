@@ -14,6 +14,7 @@ function ToolbarManager() {
 	this.toolboxes = {};
 	
 	// Create and add the main toolbar toolboxes and dividers.
+	this.toolboxes.logo = new LogoToolbox(this._mainToolbar);
 	this.toolboxes.image = new ImageToolbox(this._mainToolbar);
 	this._addDivider(this._mainToolbar);
 	this.toolboxes.tools = new ToolsToolbox(this._mainToolbar);

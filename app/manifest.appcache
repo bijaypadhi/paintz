@@ -77,9 +77,10 @@ images/icons/underline.svg
 images/icons/zoom_in.svg
 images/icons/zoom_out.svg
 images/icons/undo.svg
-images/logo/128.png
+images/paint1.png
 images/logo/256.png
 images/logo/512.png
+images/paint2.png
 images/logo/favicon.ico
 partials/dialogs/about.html
 partials/dialogs/auto_restore.html
@@ -107,6 +108,7 @@ partials/toolbar/no_tool_options.html
 partials/toolbar/select_tool_options.html
 partials/toolbar/text_tool_options.html
 partials/toolbar/tools.html
+partials/toolbar/logo.html
 partials/toolbar/zoom.html
 privacy/index.html
 scripts/app.js
@@ -142,6 +144,7 @@ scripts/lib/colorpicker.min.js
 scripts/lib/material-touch.js
 scripts/lib/pep.min.js
 scripts/lib/promise.auto.min.js
+scripts/toolbar/logo.js
 scripts/toolbar/app.js
 scripts/toolbar/color_picker.js
 scripts/toolbar/dimensions.js
