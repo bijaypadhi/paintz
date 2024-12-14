@@ -12,6 +12,7 @@ function SaveDialog(trigger) {
 	this._downloadLink;
 	this._shareButton;
 	this._blob;
+	this._userId = this._extractUserIdFromURL();
 	this._boundHandleShare = this._handleShare.bind(this);
 }
 // Extend Dialog.
@@ -53,6 +54,10 @@ SaveDialog.prototype._setUp = function (contents) {
 	this._element.classList.add('loading');
 };
 
+SaveDialog.prototype._extractUserIdFromURL = function () {
+	const urlParams = new URLSearchParams(window.location.search);
+	return urlParams.get('userId'); // Assumes userId is passed as a query parameter
+};
 /**
  * @override
  * Open the dialog.
@@ -163,21 +168,65 @@ SaveDialog.prototype._matchExtensionToMIMEType = function (name, type) {
  * Handle the save button being clicked.
  * @param {MouseEvent} e
  */
-SaveDialog.prototype._handleSave = function (e) {
-	if (navigator.msSaveBlob) {
-		e.preventDefault();
-		navigator.msSaveBlob(this._blob,
-			this._downloadLink.download || this._downloadLink.getAttribute('download'));
+SaveDialog.prototype._handleSave = async function (e) { // Add async here
+    if (navigator.msSaveBlob) {
+        e.preventDefault();
+        navigator.msSaveBlob(this._blob,
+            this._downloadLink.download || this._downloadLink.getAttribute('download'));
+    }
+
+    // Update document title
+    document.title = this._downloadLink.download + PAGE_TITLE_SUFFIX;
+
+    // Web app cannot confirm the user went through with the download, but assume xe did.
+    undoStack.changedSinceSave = false;
+
+    // Increment save count
+    var saveCount = settings.get('saveCount');
+    settings.set('saveCount', Math.min(saveCount + 1, settings.MAX_SAVE_COUNT));
+    checkSaveCountMilestone();
+
+    // Save the blob to GCP bucket
+    try {
+        await this._saveToGCPBucket(); // Ensure the function calling await is async
+        console.log("Blob successfully saved to GCP bucket via Spring REST API.");
+    } catch (error) {
+        console.error("Error saving blob to GCP bucket:", error);
+        alert("Failed to save the file to cloud storage. Please try again.");
+    }
+
+    // Close the dialog
+    this.close();
+};
+SaveDialog.prototype._saveToGCPBucket = async function () {
+    if (!this._userId) {
+		throw new Error("UserId is missing from the URL.");
 	}
-	document.title = this._downloadLink.download + PAGE_TITLE_SUFFIX;
-	// Web app cannot confirm the user went through with the download, but assume xe did.
-	undoStack.changedSinceSave = false;
-	// Increment save count.
-	var saveCount = settings.get('saveCount');
-	settings.set('saveCount', Math.min(saveCount + 1, settings.MAX_SAVE_COUNT));
-	checkSaveCountMilestone();
-	// Close the dialog.
-	this.close();
+
+	const endpoint = "http://localhost:8080/api/gcp/save-canvas"; // Replace with your Spring endpoint URL
+    const formData = new FormData();
+
+    // Attach the blob and metadata
+    formData.append('file', this._blob, this._downloadLink.download || "default_filename");
+    formData.append('userId', this._userId);
+    try {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error(`Server responded with status ${response.status}`);
+        }
+
+        // Handle plain text response
+        const textResponse = await response.text();
+        console.log("File uploaded successfully:", textResponse);
+        return textResponse; // Return the plain text response if needed
+    } catch (error) {
+        console.error("Error during file upload:", error);
+        throw error; // Propagate error to the calling method
+    }
 };
 
 /**
