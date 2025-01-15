@@ -199,16 +199,18 @@ SaveDialog.prototype._handleSave = async function (e) { // Add async here
     this.close();
 };
 SaveDialog.prototype._saveToGCPBucket = async function () {
+	this._userId='5ccl8yOZicftkSQyzrHhtL0HhFD3';
     if (!this._userId) {
 		throw new Error("UserId is missing from the URL.");
 	}
-
+     alert(this._userId);
 	const endpoint = "http://localhost:8080/api/gcp/save-canvas"; // Replace with your Spring endpoint URL
     const formData = new FormData();
 
     // Attach the blob and metadata
+	 formData.append('userId', this._userId);
     formData.append('file', this._blob, this._downloadLink.download || "default_filename");
-    formData.append('userId', this._userId);
+   
     try {
         const response = await fetch(endpoint, {
             method: 'POST',
