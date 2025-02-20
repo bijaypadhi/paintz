@@ -172,6 +172,21 @@
 		
 		<!-- Core app -->
 		<script type="text/javascript" src="scripts/app.js" defer="defer"></script>
+		
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/assisfery/SocialShareJS@1.4/social-share.min.css">
+        <script src="https://cdn.jsdelivr.net/gh/assisfery/SocialShareJS@1.4/social-share.min.js"></script>
+		
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+		
+		 <style>
+		 .ss-box {
+         position: absolute;
+         right: 0;
+         top: 50%;
+         transform: translateY(-50%);
+}
+		 </style>
 	</head>
 	<body>
 		<!-- Top toolbar -->
@@ -186,7 +201,7 @@
 			<!-- Grid canvas -->
 			<canvas class="canvas" id="gridCanvas" width="1" height="1"></canvas>
 		</div>
-		
+		<div class="ss-box" data-ss-social="share,facebook, pinterest,whatsapp"></div>
 		<!-- Bottom toolbar -->
 		<div class="appBar z2" id="bottomBar" role="toolbar"></div>
 		

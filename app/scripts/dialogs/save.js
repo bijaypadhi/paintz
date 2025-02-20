@@ -9,11 +9,9 @@ function SaveDialog(trigger) {
 	Dialog.call(this, 'save', trigger);
 	this._element.id = 'saveDialog';
 	this._progressSpinner;
-	this._downloadLink;
-	this._shareButton;
+	this._saveButton;
 	this._blob;
 	this._userId = this._extractUserIdFromURL();
-	this._boundHandleShare = this._handleShare.bind(this);
 }
 // Extend Dialog.
 SaveDialog.prototype = Object.create(Dialog.prototype);
@@ -22,8 +20,6 @@ SaveDialog.prototype.constructor = SaveDialog;
 // Define constants.
 /** @override @constant {String} The width of the dialog, as a CSS value */
 SaveDialog.prototype.WIDTH = '384px';
-/** @constant {String} The message for browsers that do not support sharing files */
-SaveDialog.prototype.SHARE_UNSUPPORTED_MESSAGE = 'Your browser or system does not support sharing from PaintKFZ.  ' + Utils.SUGGESTED_BROWSER_MESSAGE;
 
 /**
  * @override
@@ -33,184 +29,118 @@ SaveDialog.prototype.SHARE_UNSUPPORTED_MESSAGE = 'Your browser or system does no
  */
 SaveDialog.prototype._setUp = function (contents) {
 	Dialog.prototype._setUp.call(this, contents);
-	
-	this._element.fileName.onchange =
-		this._element.fileType.onchange =
-		this._element.fileType.oninput = this._updateFileExtension.bind(this);
-	
+
+	// Simplified UI: A message, progress spinner, and a Save button.
+	this._element.innerHTML = `
+		<div class="dialog-content">
+			<p>Click "Save" to save your work.</p>
+			<progress style="display: none;"></progress>
+			<button id="saveButton">Save</button>
+		</div>
+	`;
+
 	this._progressSpinner = this._element.querySelector('progress');
-	
-	this._shareButton = this._element.querySelector('#shareButton');
-	this._shareButton.onclick = this._boundHandleShare;
-	this._shareButton.disabled = true;
-	this._shareButton.title = this.SHARE_UNSUPPORTED_MESSAGE;
-	
-	this._downloadLink = this._element.querySelector('#downloadLink');
-	this._downloadLink.onclick = this._handleSave.bind(this);
-	this._element.onsubmit = (function () {
-		this._downloadLink.click();
-	}).bind(this);
-	
-	this._element.classList.add('loading');
+	this._saveButton = this._element.querySelector('#saveButton');
+
+	// Bind the Save button click event to the save handler.
+	this._saveButton.onclick = this._handleSave.bind(this);
 };
 
 SaveDialog.prototype._extractUserIdFromURL = function () {
 	const urlParams = new URLSearchParams(window.location.search);
-	return urlParams.get('userId'); // Assumes userId is passed as a query parameter
+	return urlParams.get('userId');
 };
+
 /**
  * @override
  * Open the dialog.
  */
 SaveDialog.prototype.open = function () {
 	Dialog.prototype.open.call(this);
-	
-	// Export the canvas content to an image to be saved.
-	this._createDownloadURL();
 };
 
 /**
  * @private
- * Create a new blob URL, and set it as the download URL when done.
- * @returns {Promise} Resolves when the blob has been created and the download URL set
+ * Create a new blob URL for the image.
+ * @returns {Promise} Resolves when the blob is created
  */
 SaveDialog.prototype._createDownloadURL = function () {
 	var that = this;
 	return new Promise(function (resolve, reject) {
 		that._element.classList.add('loading');
-		
-		var blob = canvas.toBlob(function (blob) {
-			that._setDownloadURL(blob);
+		that._progressSpinner.style.display = 'inline-block'; // Show progress spinner.
+		canvas.toBlob(function (blob) {
+			if (!blob) {
+				reject(new Error("Failed to create blob from canvas."));
+				return;
+			}
+			that._blob = blob;
+			that._element.classList.remove('loading');
+			that._progressSpinner.style.display = 'none'; // Hide progress spinner.
 			resolve();
-		}, that._downloadLink.type || 'image/png');
-		if (blob instanceof Blob) {
-			// Fallback for browsers in which toBlob is synchronous and returns a Blob.
-			that._setDownloadURL(blob);
-			resolve();
-		}
+		}, 'image/jpeg', 0.92); // 0.92 is the JPEG quality
 	});
 };
 
 /**
  * @private
- * Set the download URL using the blob from the canvas.
- * @param {Blob} blob - The image blob from the canvas
+ * Handle the save process.
  */
-SaveDialog.prototype._setDownloadURL = function (blob) {
-	// Remove any old blob URL.
-	URL.revokeObjectURL(this._downloadLink.href);
-	
-	// Save the new blob in case it needs to be shared or saved with `msSaveBlob`.
-	this._blob = blob;
-	
-	// Create a new URL to save.
-	var url = URL.createObjectURL(blob);
-	this._downloadLink.href = url;
-	
-	// If the web share API is supported, create a file to test whether it can be shared.
-	if (navigator.canShare) {
-		var file = new File([blob], this._element.fileName.value, { type: blob.type });
-		if (!navigator.canShare({ files: [file] })) {
-			this._shareButton.disabled = true;
-			this._shareButton.title = this.SHARE_UNSUPPORTED_MESSAGE;
-		} else {
-			this._shareButton.disabled = false;
-			this._shareButton.title = '';
-		}
-	}
-	
-	this._element.classList.remove('loading');
-};
+SaveDialog.prototype._handleSave = async function () {
+	try {
+		
+		  alert("sdfsfs");
+		// Disable the Save button to prevent multiple clicks.
+		this._saveButton.disabled = true;
 
-/**
- * @private
- * Update the file extension in the file name to match the selection in the menu.
- */
-SaveDialog.prototype._updateFileExtension = function () {
-	// Update file name.
-	var newName = this._matchExtensionToMIMEType(this._element.fileName.value, this._element.fileType.value);
-	this._element.fileName.value = newName;
-	this._downloadLink.download = newName;
-	if (this._element.fileType.value !== this._downloadLink.type) {
-		this._downloadLink.type = this._element.fileType.value;
-		this._createDownloadURL();
+		// Step 1: Create the blob from the canvas.
+		await this._createDownloadURL();
+
+		// Step 2: Generate the filename based on the save count.
+		var saveCount = settings.get('saveCount');
+		var newFileName = (saveCount + 1) + '.webp';
+
+		// Step 3: Update document title (optional).
+		document.title = newFileName + PAGE_TITLE_SUFFIX;
+
+		// Step 4: Mark the canvas as saved.
+		undoStack.changedSinceSave = false;
+
+		// Step 5: Increment save count.
+		settings.set('saveCount', Math.min(saveCount + 1, settings.MAX_SAVE_COUNT));
+		checkSaveCountMilestone();
+
+		// Step 6: Save the blob to GCP bucket.
+		await this._saveToGCPBucket(newFileName);
+		console.log("File saved successfully via REST API.");
+
+		// Step 7: Close the dialog after successful save.
+		this.close();
+	} catch (error) {
+		console.error("Error during save process:", error);
+		alert("Failed to save. Please try again.");
+	} finally {
+		// Re-enable the Save button.
+		this._saveButton.disabled = false;
 	}
 };
 
 /**
  * @private
- * Fix the extension on a file name to match a MIME type.
- * @param {String} name - The file name to fix
- * @param {String} type - The MIME type to match (image/jpeg or image/png)
- * @returns {String} - The modified file name
+ * Save the blob to GCP bucket via Spring REST API.
+ * @param {String} fileName - The filename to use for the blob
  */
-SaveDialog.prototype._matchExtensionToMIMEType = function (name, type) {
-	name = name.trim();
-	
-	if (type === 'image/png' && !PNG_REGEX.test(name)) {
-		if (FILE_EXT_REGEX.test(name)) {
-			return name.replace(FILE_EXT_REGEX, '.png');
-		} else {
-			return name + '.png';
-		}
-	} else if (type === 'image/jpeg' && !JPEG_REGEX.test(name)) {
-		if (FILE_EXT_REGEX.test(name)) {
-			return name.replace(FILE_EXT_REGEX, '.jpg');
-		} else {
-			return name + '.jpg';
-		}
-	}
-	return name;
-};
-
-/**
- * @private
- * Handle the save button being clicked.
- * @param {MouseEvent} e
- */
-SaveDialog.prototype._handleSave = async function (e) { // Add async here
-    if (navigator.msSaveBlob) {
-        e.preventDefault();
-        navigator.msSaveBlob(this._blob,
-            this._downloadLink.download || this._downloadLink.getAttribute('download'));
-    }
-
-    // Update document title
-    document.title = this._downloadLink.download + PAGE_TITLE_SUFFIX;
-
-    // Web app cannot confirm the user went through with the download, but assume xe did.
-    undoStack.changedSinceSave = false;
-
-    // Increment save count
-    var saveCount = settings.get('saveCount');
-    settings.set('saveCount', Math.min(saveCount + 1, settings.MAX_SAVE_COUNT));
-    checkSaveCountMilestone();
-
-    // Save the blob to GCP bucket
-    try {
-        await this._saveToGCPBucket(); // Ensure the function calling await is async
-        console.log("Blob successfully saved to GCP bucket via Spring REST API.");
-    } catch (error) {
-        console.error("Error saving blob to GCP bucket:", error);
-        alert("Failed to save the file to cloud storage. Please try again.");
-    }
-
-    // Close the dialog
-    this.close();
-};
-SaveDialog.prototype._saveToGCPBucket = async function () {
-	this._userId='5ccl8yOZicftkSQyzrHhtL0HhFD3';
+SaveDialog.prototype._saveToGCPBucket = async function (fileName) {
     if (!this._userId) {
-		throw new Error("UserId is missing from the URL.");
-	}
-     alert(this._userId);
-	const endpoint = "http://localhost:8080/api/gcp/save-canvas"; // Replace with your Spring endpoint URL
+         this._userId="5ccl8yOZicftkSQyzrHhtL0HhFD3";
+    }
+    alert(this._blob);
+	alert(fileName);
+    const endpoint = "http://localhost:8080/api/gcp/save-canvas";
     const formData = new FormData();
+    formData.append('userId', this._userId);
+    formData.append('file', this._blob, fileName);
 
-    // Attach the blob and metadata
-	 formData.append('userId', this._userId);
-    formData.append('file', this._blob, this._downloadLink.download || "default_filename");
-   
     try {
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -218,41 +148,14 @@ SaveDialog.prototype._saveToGCPBucket = async function () {
         });
 
         if (!response.ok) {
-            throw new Error(`Server responded with status ${response.status}`);
+            throw new Error(`Server error: ${response.status}`);
         }
 
-        // Handle plain text response
-        const textResponse = await response.text();
-        console.log("File uploaded successfully:", textResponse);
-        return textResponse; // Return the plain text response if needed
+        const result = await response.json();
+        console.log("File uploaded successfully:", result);
+        return result;
     } catch (error) {
         console.error("Error during file upload:", error);
-        throw error; // Propagate error to the calling method
+        throw error;
     }
-};
-
-/**
- * @private
- * Handle the share button being clicked.
- * @param {MouseEvent} e
- */
-SaveDialog.prototype._handleShare = function (e) {
-	if (!navigator.canShare) {
-		alert(this.SHARE_UNSUPPORTED_MESSAGE);
-		return;
-	}
-	
-	var file = new File([this._blob], this._element.fileName.value, { type: this._blob.type });
-	
-	if (!navigator.canShare({ files: [file] })) {
-		alert(this.SHARE_UNSUPPORTED_MESSAGE);
-		return;
-	}
-	
-	navigator.share({
-		files: [file],
-		title: this._element.fileName.value
-	}).then((function () {
-		this.close();
-	}).bind(this));
 };
