@@ -134,9 +134,11 @@ SaveDialog.prototype._saveToGCPBucket = async function (fileName) {
     if (!this._userId) {
          this._userId="5ccl8yOZicftkSQyzrHhtL0HhFD3";
     }
-    alert(this._blob);
-	alert(fileName);
-    const endpoint = "http://localhost:8080/api/gcp/save-canvas";
+    const baseUrl = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+        ? "http://localhost:8080" // Local API port
+        : window.location.origin; // Production assumes same origin
+    const endpoint = `${baseUrl}/api/gcp/save-canvas`;
+
     const formData = new FormData();
     formData.append('userId', this._userId);
     formData.append('file', this._blob, fileName);
